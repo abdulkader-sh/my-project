@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme; actual colors/typography are driven by Compose (see presentation/theme). -->
+    <style name="Theme.HisnAlAdhkar" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
