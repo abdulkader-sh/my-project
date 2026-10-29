@@ -10,4 +10,5 @@ interface DhikrRepository {
     fun observeById(dhikrId: Long): Flow<Dhikr?>
     fun search(query: String): Flow<List<Dhikr>>
     fun observeCategoriesByDimension(dimension: CategoryDimension): Flow<List<Category>>
+    fun observeCategoryById(categoryId: Long): Flow<Category?>
 }

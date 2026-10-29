@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.hisnaladhkar.app.presentation.home.HomeScreen
+import com.hisnaladhkar.app.navigation.AdhkarNavHost
 import com.hisnaladhkar.app.presentation.theme.HisnAlAdhkarTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             HisnAlAdhkarTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    HomeScreen()
+                    AdhkarNavHost()
                 }
             }
         }

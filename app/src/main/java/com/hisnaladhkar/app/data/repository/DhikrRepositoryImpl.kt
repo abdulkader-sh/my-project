@@ -27,4 +27,7 @@ class DhikrRepositoryImpl @Inject constructor(
 
     override fun observeCategoriesByDimension(dimension: CategoryDimension): Flow<List<Category>> =
         categoryDao.observeByDimension(dimension).map { list -> list.map { it.toDomain() } }
+
+    override fun observeCategoryById(categoryId: Long): Flow<Category?> =
+        categoryDao.observeById(categoryId).map { it?.toDomain() }
 }

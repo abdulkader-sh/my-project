@@ -2,27 +2,28 @@ package com.hisnaladhkar.app.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hisnaladhkar.app.domain.model.Dhikr
-import com.hisnaladhkar.app.domain.usecase.GetAdhkarByCategoryUseCase
+import com.hisnaladhkar.app.domain.model.Category
+import com.hisnaladhkar.app.domain.model.CategoryDimension
+import com.hisnaladhkar.app.domain.usecase.GetCategoriesByDimensionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeUiState(
     val isLoading: Boolean = true,
-    val morningAdhkar: List<Dhikr> = emptyList()
+    val timeCategories: List<Category> = emptyList(),
+    val themeCategories: List<Category> = emptyList(),
+    val popularCategories: List<Category> = emptyList(),
+    val sourceCategories: List<Category> = emptyList()
 )
-
-// معرّف تصنيف "أذكار الصباح" ثابت في بيانات البذر الأولية (انظر SeedData.CAT_MORNING).
-// سيُستبدل هذا التثبيت المباشر بشاشة اختيار تصنيفات حقيقية في المرحلة 2.
-private const val MORNING_CATEGORY_ID = 1L
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getAdhkarByCategory: GetAdhkarByCategoryUseCase
+    getCategoriesByDimension: GetCategoriesByDimensionUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -30,9 +31,20 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getAdhkarByCategory(MORNING_CATEGORY_ID).collect { adhkar ->
-                _uiState.value = HomeUiState(isLoading = false, morningAdhkar = adhkar)
-            }
+            combine(
+                getCategoriesByDimension(CategoryDimension.TIME_OCCASION),
+                getCategoriesByDimension(CategoryDimension.THEME),
+                getCategoriesByDimension(CategoryDimension.POPULAR),
+                getCategoriesByDimension(CategoryDimension.SOURCE)
+            ) { time, theme, popular, source ->
+                HomeUiState(
+                    isLoading = false,
+                    timeCategories = time,
+                    themeCategories = theme,
+                    popularCategories = popular,
+                    sourceCategories = source
+                )
+            }.collect { state -> _uiState.value = state }
         }
     }
 }

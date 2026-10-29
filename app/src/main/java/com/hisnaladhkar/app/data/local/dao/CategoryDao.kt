@@ -17,6 +17,9 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE dimension = :dimension ORDER BY sortOrder")
     fun observeByDimension(dimension: CategoryDimension): Flow<List<CategoryEntity>>
 
+    @Query("SELECT * FROM categories WHERE id = :categoryId")
+    fun observeById(categoryId: Long): Flow<CategoryEntity?>
+
     @Query("SELECT * FROM categories ORDER BY sortOrder")
     fun observeAll(): Flow<List<CategoryEntity>>
 }
