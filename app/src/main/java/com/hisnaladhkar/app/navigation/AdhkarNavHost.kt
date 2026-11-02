@@ -29,6 +29,7 @@ import com.hisnaladhkar.app.presentation.favorites.FavoritesScreen
 import com.hisnaladhkar.app.presentation.home.HomeScreen
 import com.hisnaladhkar.app.presentation.prayertimes.PrayerTimesScreen
 import com.hisnaladhkar.app.presentation.search.SearchScreen
+import com.hisnaladhkar.app.presentation.settings.SettingsScreen
 import com.hisnaladhkar.app.presentation.tasbih.TasbihScreen
 
 private data class BottomDestination(val screen: Screen, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
@@ -80,7 +81,8 @@ fun AdhkarNavHost() {
                 HomeScreen(
                     onCategoryClick = { category ->
                         navController.navigate(Screen.CategoryList.createRoute(category.id))
-                    }
+                    },
+                    onSettingsClick = { navController.navigate(Screen.Settings.route) }
                 )
             }
             composable(Screen.Search.route) {
@@ -98,6 +100,9 @@ fun AdhkarNavHost() {
             }
             composable(Screen.PrayerTimes.route) {
                 PrayerTimesScreen()
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen()
             }
             composable(
                 route = Screen.CategoryList.route,

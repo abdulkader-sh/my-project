@@ -23,9 +23,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +58,8 @@ fun DhikrDetailScreen(viewModel: DhikrDetailViewModel = hiltViewModel()) {
 
 @Composable
 private fun DhikrDetailContent(dhikr: Dhikr, onToggleFavorite: () -> Unit) {
+    var showDetails by remember { mutableStateOf(true) }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -64,6 +70,8 @@ private fun DhikrDetailContent(dhikr: Dhikr, onToggleFavorite: () -> Unit) {
                 NeedsReviewBanner()
             }
         }
+
+        item { ReadingModeToggle(showDetails = showDetails, onToggle = { showDetails = it }) }
 
         item {
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -91,30 +99,32 @@ private fun DhikrDetailContent(dhikr: Dhikr, onToggleFavorite: () -> Unit) {
 
         item { SourceRow(dhikr = dhikr) }
 
-        dhikr.repeatCount?.let { count ->
-            item { InfoSection(title = "عدد التكرار المستحب", body = "$count مرات") }
+        if (showDetails) {
+            dhikr.repeatCount?.let { count ->
+                item { InfoSection(title = "عدد التكرار المستحب", body = "$count مرات") }
+            }
+
+            dhikr.fullVirtue?.let { virtue ->
+                item { InfoSection(title = "الفضل", body = virtue) }
+            }
+
+            item {
+                InfoSection(
+                    title = "سياق/سبب الورود",
+                    body = dhikr.narrationContext?.takeIf { it.isNotBlank() } ?: "لم يرد سبب ورود موثق"
+                )
+            }
+
+            dhikr.chainOfNarration?.let { chain ->
+                item { InfoSection(title = "السند", body = chain) }
+            }
+
+            dhikr.narrator?.let { narrator ->
+                item { InfoSection(title = "الراوي", body = narrator) }
+            }
         }
 
-        dhikr.fullVirtue?.let { virtue ->
-            item { InfoSection(title = "الفضل", body = virtue) }
-        }
-
-        item {
-            InfoSection(
-                title = "سياق/سبب الورود",
-                body = dhikr.narrationContext?.takeIf { it.isNotBlank() } ?: "لم يرد سبب ورود موثق"
-            )
-        }
-
-        dhikr.chainOfNarration?.let { chain ->
-            item { InfoSection(title = "السند", body = chain) }
-        }
-
-        dhikr.narrator?.let { narrator ->
-            item { InfoSection(title = "الراوي", body = narrator) }
-        }
-
-        if (dhikr.categories.isNotEmpty()) {
+        if (showDetails && dhikr.categories.isNotEmpty()) {
             item {
                 Column {
                     Text(text = "التصنيفات", style = MaterialTheme.typography.titleMedium)
@@ -140,6 +150,21 @@ private fun DhikrDetailContent(dhikr: Dhikr, onToggleFavorite: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ReadingModeToggle(showDetails: Boolean, onToggle: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = if (showDetails) "عرض النص مع التفاصيل" else "عرض النص العربي فقط",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Switch(checked = showDetails, onCheckedChange = onToggle)
     }
 }
 
