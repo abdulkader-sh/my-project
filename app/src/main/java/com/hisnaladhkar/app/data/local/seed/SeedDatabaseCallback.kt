@@ -26,6 +26,10 @@ class SeedDatabaseCallback @Inject constructor(
             database.categoryDao().insertAll(SeedData.categories)
             database.dhikrDao().insertAll(SeedData.adhkar)
             database.dhikrCategoryCrossRefDao().insertAll(SeedData.crossRefs)
+
+            database.categoryDao().insertAll(SeedDataMafatihAlDua.categories)
+            database.dhikrDao().insertAll(SeedDataMafatihAlDua.adhkar)
+            database.dhikrCategoryCrossRefDao().insertAll(SeedDataMafatihAlDua.crossRefs)
         }
     }
 }
