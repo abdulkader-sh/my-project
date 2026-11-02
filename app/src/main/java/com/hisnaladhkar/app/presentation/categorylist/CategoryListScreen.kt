@@ -37,6 +37,14 @@ fun CategoryListScreen(
             item {
                 Text(text = uiState.categoryName, style = MaterialTheme.typography.titleLarge)
             }
+            if (uiState.adhkar.isEmpty()) {
+                item {
+                    Text(
+                        text = "لا توجد أذكار في هذا التصنيف بعد",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
             items(uiState.adhkar, key = { it.id }) { dhikr ->
                 DhikrCard(dhikr = dhikr, onClick = { onDhikrClick(dhikr.id) })
             }
