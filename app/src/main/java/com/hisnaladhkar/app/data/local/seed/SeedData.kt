@@ -22,6 +22,7 @@ object SeedData {
 
     // IDs التصنيفات ثابتة يدوياً لتسهيل ربط جدول العلاقة Many-to-Many أدناه.
     private const val CAT_MORNING = 1L               // أذكار الصباح (TIME_OCCASION)
+    private const val CAT_EVENING = 9L               // أذكار المساء (TIME_OCCASION) — بلا محتوى بعد، انظر التعليق أسفل categories
     private const val CAT_PROTECTION = 2L             // الحماية والرقية الشرعية (THEME)
     private const val CAT_ISTIGHFAR = 3L               // الاستغفار والتوبة (THEME)
     private const val CAT_PRAISE = 4L                  // الثناء على الله وأسمائه الحسنى (THEME)
@@ -30,8 +31,12 @@ object SeedData {
     private const val CAT_SOURCE_QURAN = 7L            // القرآن الكريم (SOURCE)
     private const val CAT_SOURCE_HISN = 8L             // حصن المسلم (SOURCE)
 
+    // تنبيه لصاحب المشروع: "أذكار المساء" مُضافة هنا كتصنيف فارغ (بلا أذكار بعد) لأن محتوى
+    // المساء يحتاج نقلاً دقيقاً من مصدر موثوق (حصن المسلم مثلاً) لم يتوفر لي بعد؛ أضفتها الآن
+    // فقط لأن إشعار "تذكير أذكار المساء" في هذه المرحلة يحتاج تصنيفاً يشير إليه لاحقاً.
     val categories = listOf(
         CategoryEntity(CAT_MORNING, "أذكار الصباح", CategoryDimension.TIME_OCCASION, 1),
+        CategoryEntity(CAT_EVENING, "أذكار المساء", CategoryDimension.TIME_OCCASION, 2),
         CategoryEntity(CAT_PROTECTION, "الحماية والرقية الشرعية", CategoryDimension.THEME, 1),
         CategoryEntity(CAT_ISTIGHFAR, "الاستغفار والتوبة", CategoryDimension.THEME, 2),
         CategoryEntity(CAT_PRAISE, "الثناء على الله وأسمائه الحسنى", CategoryDimension.THEME, 3),

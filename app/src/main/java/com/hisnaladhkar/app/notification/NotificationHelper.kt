@@ -18,6 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 const val PRAYER_NOTIFICATION_CHANNEL_ID = "prayer_times"
+const val ADHKAR_REMINDER_CHANNEL_ID = "adhkar_reminders"
 
 @Singleton
 class NotificationHelper @Inject constructor(
@@ -26,17 +27,46 @@ class NotificationHelper @Inject constructor(
 
     fun createChannel() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        val channel = NotificationChannel(
-            PRAYER_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.prayer_notification_channel_name),
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = context.getString(R.string.prayer_notification_channel_description)
-        }
-        context.getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
+        val manager = context.getSystemService(NotificationManager::class.java) ?: return
+
+        manager.createNotificationChannel(
+            NotificationChannel(
+                PRAYER_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.prayer_notification_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply { description = context.getString(R.string.prayer_notification_channel_description) }
+        )
+
+        manager.createNotificationChannel(
+            NotificationChannel(
+                ADHKAR_REMINDER_CHANNEL_ID,
+                context.getString(R.string.adhkar_reminder_channel_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { description = context.getString(R.string.adhkar_reminder_channel_description) }
+        )
     }
 
     fun showPrayerNotification(notificationId: Int, prayerLabel: String) {
+        show(
+            notificationId = notificationId,
+            channelId = PRAYER_NOTIFICATION_CHANNEL_ID,
+            title = context.getString(R.string.prayer_notification_title, prayerLabel),
+            body = context.getString(R.string.prayer_notification_body),
+            priority = NotificationCompat.PRIORITY_HIGH
+        )
+    }
+
+    fun showAdhkarReminder(notificationId: Int, title: String, body: String) {
+        show(
+            notificationId = notificationId,
+            channelId = ADHKAR_REMINDER_CHANNEL_ID,
+            title = title,
+            body = body,
+            priority = NotificationCompat.PRIORITY_DEFAULT
+        )
+    }
+
+    private fun show(notificationId: Int, channelId: String, title: String, body: String, priority: Int) {
         if (Build.VERSION.SDK_INT >= 33 &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
             PackageManager.PERMISSION_GRANTED
@@ -54,11 +84,11 @@ class NotificationHelper @Inject constructor(
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notification = NotificationCompat.Builder(context, PRAYER_NOTIFICATION_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_popup_reminder)
-            .setContentTitle(context.getString(R.string.prayer_notification_title, prayerLabel))
-            .setContentText(context.getString(R.string.prayer_notification_body))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setPriority(priority)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()

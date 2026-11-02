@@ -9,6 +9,8 @@ import com.hisnaladhkar.app.data.prayertimes.LocationProvider
 import com.hisnaladhkar.app.data.prayertimes.Prayer
 import com.hisnaladhkar.app.data.prayertimes.PrayerNotificationPrefs
 import com.hisnaladhkar.app.data.prayertimes.PrayerTimesCalculator
+import com.hisnaladhkar.app.data.settings.AdhkarReminder
+import com.hisnaladhkar.app.data.settings.AdhkarReminderPrefs
 import com.hisnaladhkar.app.domain.model.PrayerTimes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDate
@@ -19,22 +21,29 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 const val ACTION_SHOW_PRAYER_NOTIFICATION = "com.hisnaladhkar.app.action.SHOW_PRAYER_NOTIFICATION"
+const val ACTION_SHOW_ADHKAR_REMINDER = "com.hisnaladhkar.app.action.SHOW_ADHKAR_REMINDER"
 const val ACTION_DAILY_REFRESH = "com.hisnaladhkar.app.action.DAILY_REFRESH"
 const val EXTRA_PRAYER_NAME = "prayer_name"
+const val EXTRA_ADHKAR_REMINDER_NAME = "adhkar_reminder_name"
 
 private const val DAILY_REFRESH_REQUEST_CODE = 1000
+private const val MORNING_ADHKAR_REQUEST_CODE = 101
+private const val EVENING_ADHKAR_REQUEST_CODE = 102
+private const val MORNING_ADHKAR_OFFSET_MINUTES = 20L // بعد الفجر بوقت كافٍ لإتمام الصلاة أولاً
 
 /**
  * يحسب مواقيت اليوم (عبر Adhan + آخر موقع معروف) ويجدوِل تنبيهاً دقيقاً (AlarmManager)
- * لكل صلاة مفعَّلة لم يفت وقتها بعد، بالإضافة إلى منبِّه يومي بعد منتصف الليل بقليل
- * يعيد تكرار العملية لليوم التالي تلقائياً.
+ * لكل صلاة مفعَّلة لم يفت وقتها بعد، ولتذكيري أذكار الصباح (بعد الفجر بقليل) والمساء (مع
+ * دخول وقت العصر) إن كانا مفعَّلين، بالإضافة إلى منبِّه يومي بعد منتصف الليل بقليل يعيد
+ * تكرار العملية لليوم التالي تلقائياً.
  */
 @Singleton
 class PrayerTimeAlarmScheduler @Inject constructor(
     @ApplicationContext private val context: Context,
     private val locationProvider: LocationProvider,
     private val calculator: PrayerTimesCalculator,
-    private val prefs: PrayerNotificationPrefs
+    private val prefs: PrayerNotificationPrefs,
+    private val adhkarReminderPrefs: AdhkarReminderPrefs
 ) {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
@@ -66,7 +75,39 @@ class PrayerTimeAlarmScheduler @Inject constructor(
             }
         }
 
+        scheduleAdhkarReminder(
+            AdhkarReminder.MORNING,
+            MORNING_ADHKAR_REQUEST_CODE,
+            prayerTimes.fajr.plusMinutes(MORNING_ADHKAR_OFFSET_MINUTES),
+            today
+        )
+        scheduleAdhkarReminder(AdhkarReminder.EVENING, EVENING_ADHKAR_REQUEST_CODE, prayerTimes.asr, today)
+
         scheduleDailyRefresh(today)
+    }
+
+    private fun scheduleAdhkarReminder(reminder: AdhkarReminder, requestCode: Int, time: LocalTime, today: LocalDate) {
+        val intent = Intent(context, PrayerAlarmReceiver::class.java).apply {
+            action = ACTION_SHOW_ADHKAR_REMINDER
+            putExtra(EXTRA_ADHKAR_REMINDER_NAME, reminder.name)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager?.cancel(pendingIntent)
+
+        if (!adhkarReminderPrefs.isEnabled(reminder)) return
+
+        val triggerAt = LocalDateTime.of(today, time)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+        if (triggerAt > System.currentTimeMillis()) {
+            scheduleExactAlarm(requestCode, triggerAt, pendingIntent)
+        }
     }
 
     private fun prayerForEachTime(prayerTimes: PrayerTimes): List<Pair<Prayer, LocalTime>> = listOf(
