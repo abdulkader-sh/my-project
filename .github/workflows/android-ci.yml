@@ -34,3 +34,6 @@ jobs:
 
       - name: Run unit tests
         run: gradle testDebugUnitTest --no-daemon --stacktrace
+
+      - name: Assemble release APK (unsigned; catches release-only build issues)
+        run: gradle assembleRelease --no-daemon --stacktrace
