@@ -1,7 +1,6 @@
 package com.hisnaladhkar.app.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,9 +13,12 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: FavoriteEntity)
 
-    @Delete
-    suspend fun delete(favorite: FavoriteEntity)
-
     @Query("SELECT dhikrId FROM favorites")
     fun observeFavoriteIds(): Flow<List<Long>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE dhikrId = :dhikrId)")
+    suspend fun isFavorite(dhikrId: Long): Boolean
+
+    @Query("DELETE FROM favorites WHERE dhikrId = :dhikrId")
+    suspend fun deleteById(dhikrId: Long)
 }

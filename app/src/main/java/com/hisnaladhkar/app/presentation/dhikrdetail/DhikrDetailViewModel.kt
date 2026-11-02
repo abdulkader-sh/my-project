@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hisnaladhkar.app.domain.model.Dhikr
 import com.hisnaladhkar.app.domain.usecase.GetDhikrDetailUseCase
+import com.hisnaladhkar.app.domain.usecase.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ data class DhikrDetailUiState(
 @HiltViewModel
 class DhikrDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getDhikrDetail: GetDhikrDetailUseCase
+    private val getDhikrDetail: GetDhikrDetailUseCase,
+    private val toggleFavorite: ToggleFavoriteUseCase
 ) : ViewModel() {
 
     private val dhikrId: Long = checkNotNull(savedStateHandle["dhikrId"])
@@ -34,5 +36,9 @@ class DhikrDetailViewModel @Inject constructor(
                 _uiState.value = DhikrDetailUiState(isLoading = false, dhikr = dhikr)
             }
         }
+    }
+
+    fun onToggleFavorite() {
+        viewModelScope.launch { toggleFavorite(dhikrId) }
     }
 }

@@ -32,4 +32,14 @@ interface DhikrDao {
     @Transaction
     @Query("SELECT * FROM adhkar WHERE arabicText LIKE '%' || :query || '%'")
     fun search(query: String): Flow<List<DhikrWithCategories>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT adhkar.* FROM adhkar
+        INNER JOIN favorites ON adhkar.id = favorites.dhikrId
+        ORDER BY favorites.addedAt DESC
+        """
+    )
+    fun observeFavorites(): Flow<List<DhikrWithCategories>>
 }

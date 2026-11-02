@@ -12,10 +12,15 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,12 +48,12 @@ fun DhikrDetailScreen(viewModel: DhikrDetailViewModel = hiltViewModel()) {
         uiState.dhikr == null -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("تعذّر العثور على هذا الذكر", style = MaterialTheme.typography.bodyLarge)
         }
-        else -> DhikrDetailContent(dhikr = uiState.dhikr!!)
+        else -> DhikrDetailContent(dhikr = uiState.dhikr!!, onToggleFavorite = viewModel::onToggleFavorite)
     }
 }
 
 @Composable
-private fun DhikrDetailContent(dhikr: Dhikr) {
+private fun DhikrDetailContent(dhikr: Dhikr, onToggleFavorite: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -63,6 +68,18 @@ private fun DhikrDetailContent(dhikr: Dhikr) {
         item {
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(20.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        IconButton(onClick = onToggleFavorite) {
+                            Icon(
+                                imageVector = if (dhikr.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                                contentDescription = if (dhikr.isFavorite) "إزالة من المفضلة" else "إضافة إلى المفضلة",
+                                tint = if (dhikr.isFavorite) Color(0xFFB3261E) else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                     Text(
                         text = dhikr.arabicText,
                         style = MaterialTheme.typography.bodyLarge,
