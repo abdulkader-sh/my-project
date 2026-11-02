@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hisnaladhkar.app.presentation.categorylist.CategoryListScreen
+import com.hisnaladhkar.app.presentation.dhikrdetail.DhikrDetailScreen
 import com.hisnaladhkar.app.presentation.home.HomeScreen
 
 @Composable
@@ -27,7 +28,19 @@ fun AdhkarNavHost() {
                 navArgument("categoryId") { type = NavType.LongType }
             )
         ) {
-            CategoryListScreen()
+            CategoryListScreen(
+                onDhikrClick = { dhikrId ->
+                    navController.navigate(Screen.DhikrDetail.createRoute(dhikrId))
+                }
+            )
+        }
+        composable(
+            route = Screen.DhikrDetail.route,
+            arguments = listOf(
+                navArgument("dhikrId") { type = NavType.LongType }
+            )
+        ) {
+            DhikrDetailScreen()
         }
     }
 }

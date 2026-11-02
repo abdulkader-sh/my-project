@@ -15,24 +15,32 @@ import androidx.compose.ui.unit.dp
 import com.hisnaladhkar.app.domain.model.Dhikr
 
 @Composable
-fun DhikrCard(dhikr: Dhikr, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = dhikr.arabicText,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Start
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = dhikr.source, style = MaterialTheme.typography.labelMedium)
-                dhikr.repeatCount?.let { count ->
-                    Text(text = "التكرار: $count", style = MaterialTheme.typography.labelMedium)
-                }
+fun DhikrCard(dhikr: Dhikr, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+    val cardModifier = modifier.fillMaxWidth()
+    if (onClick != null) {
+        Card(modifier = cardModifier, onClick = onClick) { DhikrCardContent(dhikr) }
+    } else {
+        Card(modifier = cardModifier) { DhikrCardContent(dhikr) }
+    }
+}
+
+@Composable
+private fun DhikrCardContent(dhikr: Dhikr) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = dhikr.arabicText,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Start
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = dhikr.source, style = MaterialTheme.typography.labelMedium)
+            dhikr.repeatCount?.let { count ->
+                Text(text = "التكرار: $count", style = MaterialTheme.typography.labelMedium)
             }
         }
     }

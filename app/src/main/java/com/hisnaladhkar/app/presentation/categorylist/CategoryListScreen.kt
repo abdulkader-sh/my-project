@@ -19,7 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hisnaladhkar.app.presentation.components.DhikrCard
 
 @Composable
-fun CategoryListScreen(viewModel: CategoryListViewModel = hiltViewModel()) {
+fun CategoryListScreen(
+    onDhikrClick: (Long) -> Unit,
+    viewModel: CategoryListViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when {
@@ -35,8 +38,7 @@ fun CategoryListScreen(viewModel: CategoryListViewModel = hiltViewModel()) {
                 Text(text = uiState.categoryName, style = MaterialTheme.typography.titleLarge)
             }
             items(uiState.adhkar, key = { it.id }) { dhikr ->
-                // النقر لفتح شاشة "معرفة المزيد" التفصيلية سيُفعَّل في المرحلة 3.
-                DhikrCard(dhikr = dhikr)
+                DhikrCard(dhikr = dhikr, onClick = { onDhikrClick(dhikr.id) })
             }
         }
     }
