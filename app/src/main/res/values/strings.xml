@@ -2,4 +2,8 @@
 <resources>
     <string name="app_name">حصن الأذكار</string>
     <string name="home_title">حصن الأذكار</string>
+    <string name="prayer_notification_channel_name">تنبيهات مواقيت الصلاة</string>
+    <string name="prayer_notification_channel_description">تنبيه عند دخول وقت كل صلاة</string>
+    <string name="prayer_notification_title">حان الآن وقت صلاة %1$s</string>
+    <string name="prayer_notification_body">اللهم بلّغنا صلاتها</string>
 </resources>
