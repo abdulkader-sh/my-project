@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material3.Icon
@@ -26,6 +27,7 @@ import com.hisnaladhkar.app.presentation.categorylist.CategoryListScreen
 import com.hisnaladhkar.app.presentation.dhikrdetail.DhikrDetailScreen
 import com.hisnaladhkar.app.presentation.favorites.FavoritesScreen
 import com.hisnaladhkar.app.presentation.home.HomeScreen
+import com.hisnaladhkar.app.presentation.prayertimes.PrayerTimesScreen
 import com.hisnaladhkar.app.presentation.search.SearchScreen
 import com.hisnaladhkar.app.presentation.tasbih.TasbihScreen
 
@@ -33,6 +35,7 @@ private data class BottomDestination(val screen: Screen, val label: String, val 
 
 private val bottomDestinations = listOf(
     BottomDestination(Screen.Home, "الرئيسية", Icons.Filled.Home),
+    BottomDestination(Screen.PrayerTimes, "المواقيت", Icons.Filled.Schedule),
     BottomDestination(Screen.Search, "بحث", Icons.Filled.Search),
     BottomDestination(Screen.Tasbih, "التسبيح", Icons.Filled.TouchApp),
     BottomDestination(Screen.Favorites, "المفضلة", Icons.Filled.Favorite)
@@ -92,6 +95,9 @@ fun AdhkarNavHost() {
             }
             composable(Screen.Tasbih.route) {
                 TasbihScreen()
+            }
+            composable(Screen.PrayerTimes.route) {
+                PrayerTimesScreen()
             }
             composable(
                 route = Screen.CategoryList.route,
