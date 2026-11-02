@@ -7,6 +7,7 @@ import com.hisnaladhkar.app.data.local.dao.CategoryDao
 import com.hisnaladhkar.app.data.local.dao.DhikrCategoryCrossRefDao
 import com.hisnaladhkar.app.data.local.dao.DhikrDao
 import com.hisnaladhkar.app.data.local.dao.FavoriteDao
+import com.hisnaladhkar.app.data.local.dao.TasbihDao
 import com.hisnaladhkar.app.data.local.seed.SeedDatabaseCallback
 import dagger.Module
 import dagger.Provides
@@ -41,4 +42,7 @@ object DatabaseModule {
 
     @Provides
     fun provideFavoriteDao(database: AdhkarDatabase): FavoriteDao = database.favoriteDao()
+
+    @Provides
+    fun provideTasbihDao(database: AdhkarDatabase): TasbihDao = database.tasbihDao()
 }

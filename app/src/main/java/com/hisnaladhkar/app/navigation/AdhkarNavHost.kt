@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,12 +27,14 @@ import com.hisnaladhkar.app.presentation.dhikrdetail.DhikrDetailScreen
 import com.hisnaladhkar.app.presentation.favorites.FavoritesScreen
 import com.hisnaladhkar.app.presentation.home.HomeScreen
 import com.hisnaladhkar.app.presentation.search.SearchScreen
+import com.hisnaladhkar.app.presentation.tasbih.TasbihScreen
 
 private data class BottomDestination(val screen: Screen, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
 
 private val bottomDestinations = listOf(
     BottomDestination(Screen.Home, "الرئيسية", Icons.Filled.Home),
     BottomDestination(Screen.Search, "بحث", Icons.Filled.Search),
+    BottomDestination(Screen.Tasbih, "التسبيح", Icons.Filled.TouchApp),
     BottomDestination(Screen.Favorites, "المفضلة", Icons.Filled.Favorite)
 )
 
@@ -86,6 +89,9 @@ fun AdhkarNavHost() {
                 FavoritesScreen(
                     onDhikrClick = { dhikrId -> navController.navigate(Screen.DhikrDetail.createRoute(dhikrId)) }
                 )
+            }
+            composable(Screen.Tasbih.route) {
+                TasbihScreen()
             }
             composable(
                 route = Screen.CategoryList.route,

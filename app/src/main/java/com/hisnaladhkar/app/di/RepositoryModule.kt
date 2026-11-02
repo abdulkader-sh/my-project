@@ -1,7 +1,9 @@
 package com.hisnaladhkar.app.di
 
 import com.hisnaladhkar.app.data.repository.DhikrRepositoryImpl
+import com.hisnaladhkar.app.data.repository.TasbihRepositoryImpl
 import com.hisnaladhkar.app.domain.repository.DhikrRepository
+import com.hisnaladhkar.app.domain.repository.TasbihRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindDhikrRepository(impl: DhikrRepositoryImpl): DhikrRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTasbihRepository(impl: TasbihRepositoryImpl): TasbihRepository
 }

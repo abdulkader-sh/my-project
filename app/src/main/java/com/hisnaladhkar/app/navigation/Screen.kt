@@ -7,6 +7,8 @@ sealed class Screen(val route: String) {
 
     data object Favorites : Screen("favorites")
 
+    data object Tasbih : Screen("tasbih")
+
     data object CategoryList : Screen("category/{categoryId}") {
         fun createRoute(categoryId: Long) = "category/$categoryId"
     }

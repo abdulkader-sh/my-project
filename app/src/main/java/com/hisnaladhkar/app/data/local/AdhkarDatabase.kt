@@ -6,17 +6,20 @@ import com.hisnaladhkar.app.data.local.dao.CategoryDao
 import com.hisnaladhkar.app.data.local.dao.DhikrCategoryCrossRefDao
 import com.hisnaladhkar.app.data.local.dao.DhikrDao
 import com.hisnaladhkar.app.data.local.dao.FavoriteDao
+import com.hisnaladhkar.app.data.local.dao.TasbihDao
 import com.hisnaladhkar.app.data.local.entity.CategoryEntity
 import com.hisnaladhkar.app.data.local.entity.DhikrCategoryCrossRef
 import com.hisnaladhkar.app.data.local.entity.DhikrEntity
 import com.hisnaladhkar.app.data.local.entity.FavoriteEntity
+import com.hisnaladhkar.app.data.local.entity.TasbihCountEntity
 
 @Database(
     entities = [
         DhikrEntity::class,
         CategoryEntity::class,
         DhikrCategoryCrossRef::class,
-        FavoriteEntity::class
+        FavoriteEntity::class,
+        TasbihCountEntity::class
     ],
     version = 1,
     exportSchema = true
@@ -26,4 +29,5 @@ abstract class AdhkarDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun dhikrCategoryCrossRefDao(): DhikrCategoryCrossRefDao
     abstract fun favoriteDao(): FavoriteDao
+    abstract fun tasbihDao(): TasbihDao
 }
