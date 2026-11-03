@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">حصن الأذكار</string>
+    <string name="home_title">حصن الأذكار</string>
+    <string name="prayer_notification_channel_name">تنبيهات مواقيت الصلاة</string>
+    <string name="prayer_notification_channel_description">تنبيه عند دخول وقت كل صلاة</string>
+    <string name="prayer_notification_title">حان الآن وقت صلاة %1$s</string>
+    <string name="prayer_notification_body">اللهم بلّغنا صلاتها</string>
+    <string name="adhkar_reminder_channel_name">تذكير أذكار الصباح والمساء</string>
+    <string name="adhkar_reminder_channel_description">تذكير تقريبي بوقت أذكار الصباح والمساء</string>
+    <string name="adhkar_reminder_morning_title">حان وقت أذكار الصباح</string>
+    <string name="adhkar_reminder_morning_body">لا تنس أذكارك هذا الصباح</string>
+    <string name="adhkar_reminder_evening_title">حان وقت أذكار المساء</string>
+    <string name="adhkar_reminder_evening_body">لا تنس أذكارك هذا المساء</string>
+</resources>
