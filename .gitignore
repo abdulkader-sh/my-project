@@ -10,3 +10,8 @@
 local.properties
 /app/build
 *.hprof
+
+# ملف توقيع الإصدار (Release) وكلمات سره — سرّي تماماً، لا يُرفع لـGit أبداً.
+keystore.properties
+*.jks
+*.keystore
